@@ -1,22 +1,38 @@
-import psycopg2
-from clickhouse_driver import Client
-
-from tuple import create_tuple
+from csv_tuple import create_csv_tuple3
+from csv_tuple import create_csv_tuple2
 from csv_tuple import create_csv_tuple
-from postgres_creation import post
-from clickhouse_creation import click
 
-pg_con = psycopg2.connect(dbname='postgres', user='postgres', host='localhost')
-pg_con.autocommit = True
-pg_cursor = pg_con.cursor()
+from postgres_creation import Postges
+from clickhouse_creation import ClickHouse
 
-ch_cursor = Client(host='localhost')
+import time
 
-ch_cursor.execute('''DROP TABLE benchmark''')
-# pg_cursor.execute('''DROP TABLE benchmark''')
+ch = ClickHouse()
+pg = Postges()
 
-# tuple_lst = create_tuple()
-csv_tuple_lst = create_csv_tuple()
+start_time = time.time()
+dataset = create_csv_tuple()
+print("create csv tuple v1: %s sec. " % (time.time() - start_time))
 
-click(ch_cursor, csv_tuple_lst)
-# post(pg_cursor, tuple_lst)
+start_time = time.time()
+dataset = create_csv_tuple2()
+print("create csv tuple v2: %s sec. " % (time.time() - start_time))
+
+start_time = time.time()
+dataset = create_csv_tuple3()
+print("create csv tuple v3: %s sec. " % (time.time() - start_time))
+
+start_time = time.time()
+ch.create_and_insert(dataset)
+print("insert ch: %s sec. " % (time.time() - start_time))
+
+start_time = time.time()
+pg.create_and_insert(dataset)
+print("insert pg: %s sec. " % (time.time() - start_time))
+
+start_time = time.time()
+pg.create_and_insert2(dataset)
+print("insert pg: %s sec. " % (time.time() - start_time))
+
+ch.close_connect()
+pg.close_connect()

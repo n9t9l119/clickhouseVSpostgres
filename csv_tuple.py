@@ -1,132 +1,266 @@
 import csv
 from datetime import datetime
 
+def to_int(str_):
+    if(str_ == '' or str_ == None):
+        return 0
+    return int(str_)
+
+def to_float(str_):
+    if(str_ == '' or str_ == None):
+        return 0
+    return float(str_)
+
+def to_date(str_):
+    return datetime.strptime(str_, "%Y-%m-%d").date()
+
+to_int_indexses = [0,1,2,3,4,7,11,12,13,19,20,21,22,28,29,30, 37,38,40,41,45,70,71,78,79,86,87,94,95,102,103]
+to_float_indexses = [31,32,33,36,39,42,43,44,47,49,50,51,52,53,54,55,56,57,58,59,60]
+to_date_indexses = [5]
+
 converters = {
-    'Year': int,
-    'Quarter': int,
-    'Month': int,
-    'DayofMonth': int,
-    'DayOfWeek': int,
-    'FlightDate': str,
-    'UniqueCarrier': str,
-    'AirlineID': int,
-    'Carrier': str,
-    'TailNum': str,
-    'FlightNum': str,
-    'OriginAirportID': int,
-    'OriginAirportSeqID': int,
-    'OriginCityMarketID': int,
-    'Origin': str,
-    'OriginCityName': str,
-    'OriginState': str,
-    'OriginStateFips': str,
-    'OriginStateName': str,
-    'OriginWac': int,
-    'DestAirportID': int,
-    'DestAirportSeqID': int,
-    'DestCityMarketID': int,
-    'Dest': str,
-    'DestCityName': str,
-    'DestState': str,
-    'DestStateFips': str,
-    'DestStateName': str,
-    'DestWac': int,
-    'CRSDepTime': int,
-    'DepTime': int,
-    'DepDelay': int,
-    'DepDelayMinutes': int,
-    'DepDel15': int,
-    'DepartureDelayGroups': str,
-    'DepTimeBlk': str,
-    'TaxiOut': int,
-    'WheelsOff': int,
-    'WheelsOn': int,
-    'TaxiIn': int,
-    'CRSArrTime': int,
-    'ArrTime': int,
-    'ArrDelay': int,
-    'ArrDelayMinutes': int,
-    'ArrDel15': int,
-    'ArrivalDelayGroups': int,
-    'ArrTimeBlk': str,
-    'Cancelled': int,
-    'CancellationCode': str,
-    'Diverted': int,
-    'CRSElapsedTime': int,
-    'ActualElapsedTime': int,
-    'AirTime': int,
-    'Flights': int,
-    'Distance': int,
-    'DistanceGroup': int,
-    'CarrierDelay': int,
-    'WeatherDelay': int,
-    'NASDelay': int,
-    'SecurityDelay': int,
-    'LateAircraftDelay': int,
-    'FirstDepTime': str,
-    'TotalAddGTime': str,
-    'LongestAddGTime': str,
-    'DivAirportLandings': str,
-    'DivReachedDest': str,
-    'DivActualElapsedTime': str,
-    'DivArrDelay': str,
-    'DivDistance': str,
-    'Div1Airport': str,
-    'Div1AirportID': int,
-    'Div1AirportSeqID': int,
-    'Div1WheelsOn': str,
-    'Div1TotalGTime': str,
-    'Div1LongestGTime': str,
-    'Div1WheelsOff': str,
-    'Div1TailNum': str,
-    'Div2Airport': str,
-    'Div2AirportID': int,
-    'Div2AirportSeqID': int,
-    'Div2WheelsOn': str,
-    'Div2TotalGTime': str,
-    'Div2LongestGTime': str,
-    'Div2WheelsOff': str,
-    'Div2TailNum': str,
-    'Div3Airport': str,
-    'Div3AirportID': int,
-    'Div3AirportSeqID': int,
-    'Div3WheelsOn': str,
-    'Div3TotalGTime': str,
-    'Div3LongestGTime': str,
-    'Div3WheelsOff': str,
-    'Div3TailNum': str,
-    'Div4Airport': str,
-    'Div4AirportID': int,
-    'Div4AirportSeqID': int,
-    'Div4WheelsOn': str,
-    'Div4TotalGTime': str,
-    'Div4LongestGTime': str,
-    'Div4WheelsOff': str,
-    'Div4TailNum': str,
-    'Div5Airport': str,
-    'Div5AirportID': int,
-    'Div5AirportSeqID': int,
-    'Div5WheelsOn': str,
-    'Div5TotalGTime': str,
-    'Div5LongestGTime': str,
-    'Div5WheelsOff': str,
-    'Div5TailNum': str,
-    'What': str}
+    'Year': to_int,
+    'Quarter': to_int,
+    'Month': to_int,
+    'DayofMonth': to_int,
+    'DayOfWeek': to_int,
+    'FlightDate': to_date,
+    'Reporting_Airline': lambda x: x,
+    'DOT_ID_Reporting_Airline': to_int,
+    'IATA_CODE_Reporting_Airline': lambda x: x,
+    'Tail_Number': lambda x: x,
+    'Flight_Number_Reporting_Airline': lambda x: x,
+    'OriginAirportID': to_int,
+    'OriginAirportSeqID': to_int,
+    'OriginCityMarketID': to_int,
+    'Origin': lambda x: x,
+    'OriginCityName': lambda x: x,
+    'OriginState': lambda x: x,
+    'OriginStateFips': lambda x: x,
+    'OriginStateName': lambda x: x,
+    'OriginWac': to_int,
+    'DestAirportID': to_int,
+    'DestAirportSeqID': to_int,
+    'DestCityMarketID': to_int,
+    'Dest': lambda x: x,
+    'DestCityName': lambda x: x,
+    'DestState': lambda x: x,
+    'DestStateFips': lambda x: x,
+    'DestStateName': lambda x: x,
+    'DestWac': to_int,
+    'CRSDepTime': to_int,
+    'DepTime': to_int,
+    'DepDelay': to_float,
+    'DepDelayMinutes': to_float,
+    'DepDel15': to_float,
+    'DepartureDelayGroups': lambda x: x,
+    'DepTimeBlk': lambda x: x,
+    'TaxiOut': to_float,
+    'WheelsOff': to_int,
+    'WheelsOn': to_int,
+    'TaxiIn': to_float,
+    'CRSArrTime': to_int,
+    'ArrTime': to_int,
+    'ArrDelay': to_float,
+    'ArrDelayMinutes': to_float,
+    'ArrDel15': to_float,
+    'ArrivalDelayGroups': to_int,
+    'ArrTimeBlk': lambda x: x,
+    'Cancelled': to_float,
+    'CancellationCode': lambda x: x,
+    'Diverted': to_float,
+    'CRSElapsedTime': to_float,
+    'ActualElapsedTime': to_float,
+    'AirTime': to_float,
+    'Flights': to_float,
+    'Distance': to_float,
+    'DistanceGroup': to_float,
+    'CarrierDelay': to_float,
+    'WeatherDelay': to_float,
+    'NASDelay': to_float,
+    'SecurityDelay': to_float,
+    'LateAircraftDelay': to_float,
+    'FirstDepTime': lambda x: x,
+    'TotalAddGTime': lambda x: x,
+    'LongestAddGTime': lambda x: x,
+    'DivAirportLandings': lambda x: x,
+    'DivReachedDest': lambda x: x,
+    'DivActualElapsedTime': lambda x: x,
+    'DivArrDelay': lambda x: x,
+    'DivDistance': lambda x: x,
+    'Div1Airport': lambda x: x,
+    'Div1AirportID': to_int,
+    'Div1AirportSeqID': to_int,
+    'Div1WheelsOn': lambda x: x,
+    'Div1TotalGTime': lambda x: x,
+    'Div1LongestGTime': lambda x: x,
+    'Div1WheelsOff': lambda x: x,
+    'Div1TailNum': lambda x: x,
+    'Div2Airport': lambda x: x,
+    'Div2AirportID': to_int,
+    'Div2AirportSeqID': to_int,
+    'Div2WheelsOn': lambda x: x,
+    'Div2TotalGTime': lambda x: x,
+    'Div2LongestGTime': lambda x: x,
+    'Div2WheelsOff': lambda x: x,
+    'Div2TailNum': lambda x: x,
+    'Div3Airport': lambda x: x,
+    'Div3AirportID': to_int,
+    'Div3AirportSeqID': to_int,
+    'Div3WheelsOn': lambda x: x,
+    'Div3TotalGTime': lambda x: x,
+    'Div3LongestGTime': lambda x: x,
+    'Div3WheelsOff': lambda x: x,
+    'Div3TailNum': lambda x: x,
+    'Div4Airport': lambda x: x,
+    'Div4AirportID': to_int,
+    'Div4AirportSeqID': to_int,
+    'Div4WheelsOn': lambda x: x,
+    'Div4TotalGTime': lambda x: x,
+    'Div4LongestGTime': lambda x: x,
+    'Div4WheelsOff': lambda x: x,
+    'Div4TailNum': lambda x: x,
+    'Div5Airport': lambda x: x,
+    'Div5AirportID': to_int,
+    'Div5AirportSeqID': to_int,
+    'Div5WheelsOn': lambda x: x,
+    'Div5TotalGTime': lambda x: x,
+    'Div5LongestGTime': lambda x: x,
+    'Div5WheelsOff': lambda x: x,
+    'Div5TailNum': lambda x: x}
 
+converters2 = {
+    'Year': to_int,
+    'Quarter': to_int,
+    'Month': to_int,
+    'DayofMonth': to_int,
+    'DayOfWeek': to_int,
+    'FlightDate': to_date,
+    'DOT_ID_Reporting_Airline': to_int,
+    'OriginAirportID': to_int,
+    'OriginAirportSeqID': to_int,
+    'OriginCityMarketID': to_int,
+    'OriginWac': to_int,
+    'DestAirportID': to_int,
+    'DestAirportSeqID': to_int,
+    'DestCityMarketID': to_int,
+    'DestWac': to_int,
+    'CRSDepTime': to_int,
+    'DepTime': to_int,
+    'DepDelay': to_float,
+    'DepDelayMinutes': to_float,
+    'DepDel15': to_float,
+    'TaxiOut': to_float,
+    'WheelsOff': to_int,
+    'WheelsOn': to_int,
+    'TaxiIn': to_float,
+    'CRSArrTime': to_int,
+    'ArrTime': to_int,
+    'ArrDelay': to_float,
+    'ArrDelayMinutes': to_float,
+    'ArrDel15': to_float,
+    'ArrivalDelayGroups': to_int,
+    'Cancelled': to_float,
+    'Diverted': to_float,
+    'CRSElapsedTime': to_float,
+    'ActualElapsedTime': to_float,
+    'AirTime': to_float,
+    'Flights': to_float,
+    'Distance': to_float,
+    'DistanceGroup': to_float,
+    'CarrierDelay': to_float,
+    'WeatherDelay': to_float,
+    'NASDelay': to_float,
+    'SecurityDelay': to_float,
+    'LateAircraftDelay': to_float,
+    'Div1AirportID': to_int,
+    'Div1AirportSeqID': to_int,
+    'Div2AirportID': to_int,
+    'Div2AirportSeqID': to_int,
+    'Div3AirportID': to_int,
+    'Div3AirportSeqID': to_int,
+    'Div4AirportID': to_int,
+    'Div4AirportSeqID': to_int,
+    'Div5AirportID': to_int,
+    'Div5AirportSeqID': to_int}
 
+# v1 - использовать списки индексов, которые нужно ковертировать в нужный тип 
 def create_csv_tuple():
-    with open('On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2017_6.csv') as csv_file:
-        csv_table = csv.reader(csv_file)
-        csv_tuple = list(csv_table)
-        for line in csv_tuple:
-            line = line[0].split(',')
-            print(line)
-            for i, type in enumerate(converters):
-                if line[i] != "":
-                    line[i] = converters[type](line[i])
-                print(line[i])
-        return csv_tuple
+    with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
+        data_rows = []
+        for row in csv_reader:
+            #Пропускать строку с заголовками
+            if(csv_reader.line_num == 1):
+                continue
+            
+            #Заплатка, чтобы ограничить датасет на Х строк
+            if(csv_reader.line_num == 50010):
+                break
 
+            row_lst = []
+
+            for i in range(0, len(row)-1):
+                if(i in to_int_indexses):
+                    row_lst.append(to_int(row[i]))
+                elif(i in to_float_indexses):
+                    row_lst.append(to_float(row[i]))
+                elif(i in to_date_indexses):
+                    row_lst.append(to_date(row[i]))
+                else:
+                    row_lst.append(row[i])
+            
+            data_rows.append(row_lst)
+
+            if(csv_reader.line_num % 10000 == 0):
+                    print(csv_reader.line_num)
+            
+        return data_rows
+
+#v2 словарь "имя столбца- функция конвертации"
+def create_csv_tuple2():
+    with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        data_rows = []
+        for row in csv_reader:
+            if(csv_reader.line_num == 50010):
+                break
+
+            row_lst = []
+
+            for k, v in converters.items():
+                row_lst.append(v(row[k]))
+            
+            data_rows.append(row_lst)
+
+            if(csv_reader.line_num % 10000 == 0):
+                    print(csv_reader.line_num)
+            
+        return data_rows
+
+#v2 словарь "имя столбца- функция конвертации", но без стобцов, где должен быть str
+def create_csv_tuple3():
+    with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        data_rows = []
+        for row in csv_reader:
+            if(csv_reader.line_num == 50010):
+                break
+
+            row_lst = []
+
+            for k,v in row.items():
+                if(k in converters2):
+                    row_lst.append(converters[k](v))
+                elif(k != ''):
+                    row_lst.append(v)
+            
+            data_rows.append(row_lst)
+
+            if(csv_reader.line_num % 10000 == 0):
+                    print(csv_reader.line_num)
+            
+        return data_rows
 
 def test_data_types():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2017_6.csv') as f:
@@ -135,7 +269,4 @@ def test_data_types():
             print(row)
             for i in row:
                 print(type(i))
-
-
-create_csv_tuple()
 

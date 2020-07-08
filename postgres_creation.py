@@ -1,147 +1,150 @@
+import math, psycopg2
 from psycopg2.extras import execute_values
 
+class Postges:
+    tableName = 'benchmark2'
 
-# def create_table(pg_cursor):
-#     pg_cursor.execute('''CREATE TABLE IF NOT EXISTS benchmark
-#                        ( id int,
-#                         col1 text,
-#                         col2 text,
-#                         col3 text,
-#                         col4 text,
-#                         col5 text
-#                       )''')
+    def __init__(self):
+        self.connection = psycopg2.connect(dbname='postgres', user='postgres', host='localhost')
+        self.connection.autocommit = True
+        self.cursor = self.connection.cursor()
 
-# Data types need to be edited
-def create_table(pg_cursor):
-    pg_cursor.execute('''CREATE TABLE IF NOT EXISTS benchmark
-                       (  Year int,
-                          Quarter int,
-                          Month int,
-                          DayofMonth int,
-                          DayOfWeek int,
-                          FlightDate Date,
-                          UniqueCarrier text,
-                          AirlineID int,
-                          Carrier text,
-                          TailNum text,
-                          FlightNum text,
-                          OriginAirportID int,
-                          OriginAirportSeqID int,
-                          OriginCityMarketID int,
-                          Origin text,
-                          OriginCityName text,
-                          OriginState text,
-                          OriginStateFips text,
-                          OriginStateName text,
-                          OriginWac int,
-                          DestAirportID int,
-                          DestAirportSeqID int,
-                          DestCityMarketID int,
-                          Dest text,
-                          DestCityName text,
-                          DestState text,
-                          DestStateFips text,
-                          DestStateName text,
-                          DestWac int,
-                          CRSDepTime int,
-                          DepTime int,
-                          DepDelay int,
-                          DepDelayMinutes int,
-                          DepDel15 int,
-                          DepartureDelayGroups text,
-                          DepTimeBlk text,
-                          TaxiOut int,
-                          WheelsOff int,
-                          WheelsOn int,
-                          TaxiIn int,
-                          CRSArrTime int,
-                          ArrTime int,
-                          ArrDelay int,
-                          ArrDelayMinutes int,
-                          ArrDel15 int,
-                          ArrivalDelayGroups int,
-                          ArrTimeBlk text,
-                          Cancelled int,
-                          CancellationCode text,
-                          Diverted int,
-                          CRSElapsedTime int,
-                          ActualElapsedTime int,
-                          AirTime int,
-                          Flights int,
-                          Distance int,
-                          DistanceGroup int,
-                          CarrierDelay int,
-                          WeatherDelay int,
-                          NASDelay int,
-                          SecurityDelay int,
-                          LateAircraftDelay int,
-                          FirstDepTime text,
-                          TotalAddGTime text,
-                          LongestAddGTime text,
-                          DivAirportLandings text,
-                          DivReachedDest text,
-                          DivActualElapsedTime text,
-                          DivArrDelay text,
-                          DivDistance text,
-                          Div1Airport text,
-                          Div1AirportID int,
-                          Div1AirportSeqID int,
-                          Div1WheelsOn text,
-                          Div1TotalGTime text,
-                          Div1LongestGTime text,
-                          Div1WheelsOff text,
-                          Div1TailNum text,
-                          Div2Airport text,
-                          Div2AirportID int,
-                          Div2AirportSeqID int,
-                          Div2WheelsOn text,
-                          Div2TotalGTime text,
-                          Div2LongestGTime text,
-                          Div2WheelsOff text,
-                          Div2TailNum text,
-                          Div3Airport text,
-                          Div3AirportID int,
-                          Div3AirportSeqID int,
-                          Div3WheelsOn text,
-                          Div3TotalGTime text,
-                          Div3LongestGTime text,
-                          Div3WheelsOff text,
-                          Div3TailNum text,
-                          Div4Airport text,
-                          Div4AirportID int,
-                          Div4AirportSeqID int,
-                          Div4WheelsOn text,
-                          Div4TotalGTime text,
-                          Div4LongestGTime text,
-                          Div4WheelsOff text,
-                          Div4TailNum text,
-                          Div5Airport text,
-                          Div5AirportID int,
-                          Div5AirportSeqID int,
-                          Div5WheelsOn text,
-                          Div5TotalGTime text,
-                          Div5LongestGTime text,
-                          Div5WheelsOff text,
-                          Div5TailNum text
-                       )''')
+    def create_table(self):
+        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.tableName}
+                        (Year smallint,
+                            Quarter smallint,
+                            Month smallint,
+                            DayofMonth smallint,
+                            DayOfWeek smallint,
+                            FlightDate date,
+                            UniqueCarrier varchar(7),
+                            AirlineID integer,
+                            Carrier varchar(2),
+                            TailNum text,
+                            FlightNum text,
+                            OriginAirportID integer,
+                            OriginAirportSeqID integer,
+                            OriginCityMarketID integer,
+                            Origin varchar(5),
+                            OriginCityName text,
+                            OriginState varchar(2),
+                            OriginStateFips text,
+                            OriginStateName text,
+                            OriginWac integer,
+                            DestAirportID integer,
+                            DestAirportSeqID integer,
+                            DestCityMarketID integer,
+                            Dest varchar(5),
+                            DestCityName text,
+                            DestState varchar(2),
+                            DestStateFips text,
+                            DestStateName text,
+                            DestWac integer,
+                            CRSDepTime integer,
+                            DepTime integer,
+                            DepDelay real,
+                            DepDelayMinutes real,
+                            DepDel15 real,
+                            DepartureDelayGroups text,
+                            DepTimeBlk text,
+                            TaxiOut real,
+                            WheelsOff integer,
+                            WheelsOn integer,
+                            TaxiIn real,
+                            CRSArrTime integer,
+                            ArrTime integer,
+                            ArrDelay real,
+                            ArrDelayMinutes real,
+                            ArrDel15 real,
+                            ArrivalDelayGroups integer,
+                            ArrTimeBlk text,
+                            Cancelled real,
+                            CancellationCode varchar(1),
+                            Diverted real,
+                            CRSElapsedTime real,
+                            ActualElapsedTime real,
+                            AirTime real,
+                            Flights real,
+                            Distance real,
+                            DistanceGroup real,
+                            CarrierDelay real,
+                            WeatherDelay real,
+                            NASDelay real,
+                            SecurityDelay real,
+                            LateAircraftDelay real,
+                            FirstDepTime text,
+                            TotalAddGTime text,
+                            LongestAddGTime text,
+                            DivAirportLandings text,
+                            DivReachedDest text,
+                            DivActualElapsedTime text,
+                            DivArrDelay text,
+                            DivDistance text,
+                            Div1Airport text,
+                            Div1AirportID integer,
+                            Div1AirportSeqID integer,
+                            Div1WheelsOn text,
+                            Div1TotalGTime text,
+                            Div1LongestGTime text,
+                            Div1WheelsOff text,
+                            Div1TailNum text,
+                            Div2Airport text,
+                            Div2AirportID integer,
+                            Div2AirportSeqID integer,
+                            Div2WheelsOn text,
+                            Div2TotalGTime text,
+                            Div2LongestGTime text,
+                            Div2WheelsOff text,
+                            Div2TailNum text,
+                            Div3Airport text,
+                            Div3AirportID integer,
+                            Div3AirportSeqID integer,
+                            Div3WheelsOn text,
+                            Div3TotalGTime text,
+                            Div3LongestGTime text,
+                            Div3WheelsOff text,
+                            Div3TailNum text,
+                            Div4Airport text,
+                            Div4AirportID integer,
+                            Div4AirportSeqID integer,
+                            Div4WheelsOn text,
+                            Div4TotalGTime text,
+                            Div4LongestGTime text,
+                            Div4WheelsOff text,
+                            Div4TailNum text,
+                            Div5Airport text,
+                            Div5AirportID integer,
+                            Div5AirportSeqID integer,
+                            Div5WheelsOn text,
+                            Div5TotalGTime text,
+                            Div5LongestGTime text,
+                            Div5WheelsOff text,
+                            Div5TailNum text
+                        )''')
+        self.cursor.execute(f"TRUNCATE TABLE {self.tableName}")
 
+    #v1
+    def insert_data(self, dataset):
+        query = f"INSERT INTO {self.tableName} VALUES %s"
+        execute_values(self.cursor, query, dataset)
+            
 
-def insert_data(pg_cursor, tuple_lst):
-    for i in range(1, 11):
-        print(i * 10000)
-        # execute_values(pg_cursor, "INSERT INTO benchmark (id, col1, col2, col3, col4, col5) VALUES %s",
-        #              tuple_lst[(i - 1) * 10000:i * 10000])
-        pg_cursor.execute("INSERT INTO benchmark VALUES", tuple_lst[(i - 1) * 10000:i * 10000])
+    #v2 - для проверки есть ли разница в скорости добавлять весь датасет или лучше разбить на части
+    def insert_data2(self, dataset):
+        query = f"INSERT INTO {self.tableName} VALUES %s"
+        
+        for i in range(1, math.ceil(len(dataset) / 10000) +1):
+            print("pg insert {} of {}".format(str(i * 10000), len(dataset)))
+            execute_values(self.cursor, query, dataset[(i-1)*10000:i*10000])
 
+    def create_and_insert(self, dataset):
+        self.create_table()
+        self.insert_data(dataset)
 
-def post(pg_cursor, tuple_lst):
-    create_table(pg_cursor)
-    insert_data(pg_cursor, tuple_lst)
+    def create_and_insert2(self, dataset):
+        self.create_table()
+        self.insert_data2(dataset)
 
-    # pg_cursor.execute('''SELECT t.id, Count(*)
-    # FROM (SELECT id FROM benchmark) as t
-    # GROUP BY t.id
-    # HAVING Count(*) = 1''')
-    #
-    # pg_cursor.execute('''SELECT Count(*) FROM benchmark''')
-    # pg_cursor.fetchall()
+    def close_connect(self):
+        self.cursor.close()
+        self.connection.close()
