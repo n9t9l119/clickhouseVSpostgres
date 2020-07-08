@@ -1,11 +1,11 @@
 from clickhouse_driver import Client
 
+
 class ClickHouse:
     tableName = 'benchmark3'
 
     def __init__(self):
         self.client = Client(host='localhost')
-
 
     def create_table(self):
         self.client.execute(f'''CREATE TABLE IF NOT EXISTS {self.tableName}
@@ -121,10 +121,8 @@ class ClickHouse:
                             )Engine=Log()''')
         self.client.execute(f"TRUNCATE TABLE {self.tableName}")
 
-
     def insert_data(self, dataset):
         self.client.execute(f"INSERT INTO {self.tableName} VALUES", dataset)
-
 
     def create_and_insert(self, dataset):
         self.create_table()

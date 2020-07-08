@@ -1,9 +1,9 @@
-from csv_tuple import create_csv_tuple3
-from csv_tuple import create_csv_tuple2
-from csv_tuple import create_csv_tuple
+from databases_creation.dataset_reader import create_csv_tuple3
+from databases_creation.dataset_reader import create_csv_tuple2
+from databases_creation.dataset_reader import create_csv_tuple
 
-from postgres_creation import Postges
-from clickhouse_creation import ClickHouse
+from databases_creation.postgres_creation import Postges
+from databases_creation.clickhouse_creation import ClickHouse
 
 import time
 

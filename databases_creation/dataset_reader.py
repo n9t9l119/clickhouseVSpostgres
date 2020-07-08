@@ -1,22 +1,27 @@
 import csv
 from datetime import datetime
 
+
 def to_int(str_):
-    if(str_ == '' or str_ == None):
+    if str_ == '' or str_ is None:
         return 0
     return int(str_)
 
+
 def to_float(str_):
-    if(str_ == '' or str_ == None):
+    if str_ == '' or str_ is None:
         return 0
     return float(str_)
+
 
 def to_date(str_):
     return datetime.strptime(str_, "%Y-%m-%d").date()
 
-to_int_indexses = [0,1,2,3,4,7,11,12,13,19,20,21,22,28,29,30, 37,38,40,41,45,70,71,78,79,86,87,94,95,102,103]
-to_float_indexses = [31,32,33,36,39,42,43,44,47,49,50,51,52,53,54,55,56,57,58,59,60]
-to_date_indexses = [5]
+
+to_int_indexes = [0, 1, 2, 3, 4, 7, 11, 12, 13, 19, 20, 21, 22, 28, 29, 30, 37, 38, 40, 41, 45, 70, 71, 78, 79, 86, 87,
+                  94, 95, 102, 103]
+to_float_indexes = [31, 32, 33, 36, 39, 42, 43, 44, 47, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
+to_date_indexes = [5]
 
 converters = {
     'Year': to_int,
@@ -184,83 +189,87 @@ converters2 = {
     'Div5AirportID': to_int,
     'Div5AirportSeqID': to_int}
 
-# v1 - использовать списки индексов, которые нужно ковертировать в нужный тип 
+
+# v1 - использовать списки индексов, которые нужно ковертировать в нужный тип
 def create_csv_tuple():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
         data_rows = []
         for row in csv_reader:
-            #Пропускать строку с заголовками
-            if(csv_reader.line_num == 1):
+            # Пропускать строку с заголовками
+            if csv_reader.line_num == 1:
                 continue
-            
-            #Заплатка, чтобы ограничить датасет на Х строк
-            if(csv_reader.line_num == 50010):
+
+            # Заплатка, чтобы ограничить датасет на Х строк
+            if csv_reader.line_num == 50010:
                 break
 
             row_lst = []
 
-            for i in range(0, len(row)-1):
-                if(i in to_int_indexses):
+            for i in range(0, len(row) - 1):
+                if i in to_int_indexes:
                     row_lst.append(to_int(row[i]))
-                elif(i in to_float_indexses):
+                elif i in to_float_indexes:
                     row_lst.append(to_float(row[i]))
-                elif(i in to_date_indexses):
+                elif i in to_date_indexes:
                     row_lst.append(to_date(row[i]))
                 else:
                     row_lst.append(row[i])
-            
+
             data_rows.append(row_lst)
 
-            if(csv_reader.line_num % 10000 == 0):
-                    print(csv_reader.line_num)
-            
+            if csv_reader.line_num % 10000 == 0:
+                print(csv_reader.line_num)
+
         return data_rows
 
-#v2 словарь "имя столбца- функция конвертации"
+
+# v2 словарь "имя столбца- функция конвертации"
 def create_csv_tuple2():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         data_rows = []
         for row in csv_reader:
-            if(csv_reader.line_num == 50010):
+            if csv_reader.line_num == 50010:
                 break
 
             row_lst = []
 
             for k, v in converters.items():
                 row_lst.append(v(row[k]))
-            
+
             data_rows.append(row_lst)
 
-            if(csv_reader.line_num % 10000 == 0):
-                    print(csv_reader.line_num)
-            
+            if csv_reader.line_num % 10000 == 0:
+                print(csv_reader.line_num)
+
         return data_rows
 
-#v2 словарь "имя столбца- функция конвертации", но без стобцов, где должен быть str
+
+# v2 словарь "имя столбца- функция конвертации", но без стобцов, где должен быть str
 def create_csv_tuple3():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         data_rows = []
         for row in csv_reader:
-            if(csv_reader.line_num == 50010):
+            if csv_reader.line_num == 50010:
                 break
 
             row_lst = []
 
-            for k,v in row.items():
-                if(k in converters2):
+            for k, v in row.items():
+                if k in converters2:
                     row_lst.append(converters[k](v))
-                elif(k != ''):
+                elif k != '':
                     row_lst.append(v)
-            
+
             data_rows.append(row_lst)
 
-            if(csv_reader.line_num % 10000 == 0):
-                    print(csv_reader.line_num)
-            
+            if csv_reader.line_num % 10000 == 0:
+                print(csv_reader.line_num)
+
         return data_rows
+
 
 def test_data_types():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2017_6.csv') as f:
@@ -269,4 +278,3 @@ def test_data_types():
             print(row)
             for i in row:
                 print(type(i))
-
