@@ -1,18 +1,15 @@
-import csv
+import csv, glob
 from datetime import datetime
-
 
 def to_int(str_):
     if str_ == '' or str_ is None:
         return 0
     return int(str_)
 
-
 def to_float(str_):
     if str_ == '' or str_ is None:
         return 0
     return float(str_)
-
 
 def to_date(str_):
     return datetime.strptime(str_, "%Y-%m-%d").date()
@@ -190,86 +187,92 @@ converters2 = {
     'Div5AirportSeqID': to_int}
 
 
+def get_csv_files():
+    for file in glob.glob("..\On_Time_Reporting_Carrier_On_Time_Performance_*.csv"):
+        yield file
+
+limit = 10000
+
 # v1 - использовать списки индексов, которые нужно ковертировать в нужный тип
-def create_csv_tuple():
-    with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
-        data_rows = []
-        for row in csv_reader:
-            # Пропускать строку с заголовками
-            if csv_reader.line_num == 1:
-                continue
+def read_dataset():
+    data_rows = []
+    for file in get_csv_files():
+        with open(file) as csv_file:
+            csv_reader = csv.reader(csv_file)
+            for row in csv_reader:
+                # Пропускать строку с заголовками
+                if csv_reader.line_num == 1:
+                    continue
 
-            # Заплатка, чтобы ограничить датасет на Х строк
-            if csv_reader.line_num == 50010:
-                break
+                # Заплатка, чтобы ограничить датасет на Х строк
+                if csv_reader.line_num == limit + 2:
+                    break
 
-            row_lst = []
+                row_lst = []
 
-            for i in range(0, len(row) - 1):
-                if i in to_int_indexes:
-                    row_lst.append(to_int(row[i]))
-                elif i in to_float_indexes:
-                    row_lst.append(to_float(row[i]))
-                elif i in to_date_indexes:
-                    row_lst.append(to_date(row[i]))
-                else:
-                    row_lst.append(row[i])
+                for i in range(0, len(row) - 1):
+                    if i in to_int_indexes:
+                        row_lst.append(to_int(row[i]))
+                    elif i in to_float_indexes:
+                        row_lst.append(to_float(row[i]))
+                    elif i in to_date_indexes:
+                        row_lst.append(to_date(row[i]))
+                    else:
+                        row_lst.append(row[i])
 
-            data_rows.append(row_lst)
+                data_rows.append(row_lst)
 
-            if csv_reader.line_num % 10000 == 0:
-                print(csv_reader.line_num)
+                if csv_reader.line_num % 10000 == 0:
+                    print(csv_reader.line_num)
 
-        return data_rows
-
+    return data_rows
 
 # v2 словарь "имя столбца- функция конвертации"
-def create_csv_tuple2():
-    with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        data_rows = []
-        for row in csv_reader:
-            if csv_reader.line_num == 50010:
-                break
+def read_dataset2():
+    data_rows = []
+    for file in get_csv_files():
+        with open(file) as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            data_rows = []
+            for row in csv_reader:
+                if csv_reader.line_num == limit + 2:
+                    break
 
-            row_lst = []
+                row_lst = []
 
-            for k, v in converters.items():
-                row_lst.append(v(row[k]))
+                for k, v in converters.items():
+                    row_lst.append(v(row[k]))
 
-            data_rows.append(row_lst)
+                data_rows.append(row_lst)
 
-            if csv_reader.line_num % 10000 == 0:
-                print(csv_reader.line_num)
-
-        return data_rows
-
+                if csv_reader.line_num % 10000 == 0:
+                    print(csv_reader.line_num)
+    return data_rows
 
 # v2 словарь "имя столбца- функция конвертации", но без стобцов, где должен быть str
-def create_csv_tuple3():
-    with open('On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.csv') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        data_rows = []
-        for row in csv_reader:
-            if csv_reader.line_num == 50010:
-                break
+def read_dataset3():
+    data_rows = []
+    for file in get_csv_files():
+        with open(file) as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            data_rows = []
+            for row in csv_reader:
+                if csv_reader.line_num == limit + 2:
+                    break
 
-            row_lst = []
+                row_lst = []
 
-            for k, v in row.items():
-                if k in converters2:
-                    row_lst.append(converters[k](v))
-                elif k != '':
-                    row_lst.append(v)
+                for k, v in row.items():
+                    if k in converters2:
+                        row_lst.append(converters[k](v))
+                    elif k != '':
+                        row_lst.append(v)
 
-            data_rows.append(row_lst)
+                data_rows.append(row_lst)
 
-            if csv_reader.line_num % 10000 == 0:
-                print(csv_reader.line_num)
-
-        return data_rows
-
+                if csv_reader.line_num % 10000 == 0:
+                    print(csv_reader.line_num)
+    return data_rows
 
 def test_data_types():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2017_6.csv') as f:

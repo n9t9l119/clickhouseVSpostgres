@@ -1,11 +1,10 @@
 from clickhouse_driver import Client
 
-
 class ClickHouse:
-    tableName = 'benchmark3'
+    tableName = 'benchmark'
 
-    def __init__(self):
-        self.client = Client(host='localhost')
+    def __init__(self, host):
+        self.client = Client(host=host)
 
     def create_table(self):
         self.client.execute(f'''CREATE TABLE IF NOT EXISTS {self.tableName}
@@ -118,7 +117,10 @@ class ClickHouse:
                             Div5LongestGTime String,
                             Div5WheelsOff String,
                             Div5TailNum String
-                            )Engine=Log()''')
+                            )ENGINE = MergeTree
+                            PARTITION BY Year
+                            ORDER BY (Carrier, FlightDate)
+                            SETTINGS index_granularity = 8192;''')
         self.client.execute(f"TRUNCATE TABLE {self.tableName}")
 
     def insert_data(self, dataset):

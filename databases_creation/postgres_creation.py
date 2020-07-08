@@ -2,10 +2,10 @@ import math, psycopg2
 from psycopg2.extras import execute_values
 
 class Postges:
-    tableName = 'benchmark2'
+    tableName = 'benchmark'
 
-    def __init__(self):
-        self.connection = psycopg2.connect(dbname='postgres', user='postgres', host='localhost')
+    def __init__(self, host, user, password=None):
+        self.connection = psycopg2.connect(user=user, host=host, password=password)
         self.connection.autocommit = True
         self.cursor = self.connection.cursor()
 
