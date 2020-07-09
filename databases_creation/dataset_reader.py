@@ -1,15 +1,18 @@
 import csv, glob
 from datetime import datetime
 
+
 def to_int(str_):
     if str_ == '' or str_ is None:
         return 0
     return int(str_)
 
+
 def to_float(str_):
     if str_ == '' or str_ is None:
         return 0
     return float(str_)
+
 
 def to_date(str_):
     return datetime.strptime(str_, "%Y-%m-%d").date()
@@ -191,7 +194,9 @@ def get_csv_files():
     for file in glob.glob("..\On_Time_Reporting_Carrier_On_Time_Performance_*.csv"):
         yield file
 
+
 limit = 10000
+
 
 # v1 - использовать списки индексов, которые нужно ковертировать в нужный тип
 def read_dataset():
@@ -227,6 +232,7 @@ def read_dataset():
 
     return data_rows
 
+
 # v2 словарь "имя столбца- функция конвертации"
 def read_dataset2():
     data_rows = []
@@ -248,6 +254,7 @@ def read_dataset2():
                 if csv_reader.line_num % 10000 == 0:
                     print(csv_reader.line_num)
     return data_rows
+
 
 # v2 словарь "имя столбца- функция конвертации", но без стобцов, где должен быть str
 def read_dataset3():
@@ -273,6 +280,7 @@ def read_dataset3():
                 if csv_reader.line_num % 10000 == 0:
                     print(csv_reader.line_num)
     return data_rows
+
 
 def test_data_types():
     with open('On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2017_6.csv') as f:

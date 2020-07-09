@@ -1,5 +1,6 @@
 from clickhouse_driver import Client
 
+
 class ClickHouse:
     tableName = 'benchmark'
 
