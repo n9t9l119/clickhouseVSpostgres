@@ -17,7 +17,7 @@ if __name__ == "__main__":
         # print("create csv tuple v2: %s sec. " % (time.time() - start_time))
 
         start_time = time.time()
-        dataset = dataset_reader.read_dataset3()
+        dataset = dataset_reader.read_dataset()
         print("create csv tuple v3: %s sec. " % (time.time() - start_time))
 
         start_time = time.time()
