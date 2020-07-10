@@ -24,7 +24,7 @@ converters = {
     'Year': to_int,
     'Quarter': to_int,
     'Month': to_int,
-    'DayofMonth': to_int,
+    'DayOfMonth': to_int,
     'DayOfWeek': to_int,
     'FlightDate': to_date,
     'DOT_ID_Reporting_Airline': to_int,
@@ -81,23 +81,18 @@ def get_csv_files():
         yield file
 
 
-def read_dataset():
+def read_dataset(file):
     data_rows = []
-    for file in get_csv_files():
-        with open(file) as csv_file:
-            # print("csv open {}".format(file))
-            csv_reader = csv.DictReader(csv_file)
-            for row in csv_reader:
-                row_lst = []
+    with open(file) as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            row_lst = []
 
-                for k, v in row.items():
-                    if k in converters:
-                        row_lst.append(converters[k](v))
-                    elif k != '':
-                        row_lst.append(v)
+            for k, v in row.items():
+                if k in converters:
+                    row_lst.append(converters[k](v))
+                elif k != '':
+                    row_lst.append(v)
 
-                data_rows.append(row_lst)
-
-                # if csv_reader.line_num % 100000 == 0:
-                #     print("csv read {}".format(csv_reader.line_num))
+            data_rows.append(row_lst)
     return data_rows

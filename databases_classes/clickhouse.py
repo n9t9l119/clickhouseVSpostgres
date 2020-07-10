@@ -12,7 +12,7 @@ class ClickHouse:
                             (Year Int16,
                             Quarter Int16,
                             Month Int16,
-                            DayofMonth Int16,
+                            DayOfMonth Int16,
                             DayOfWeek Int16,
                             FlightDate date,
                             UniqueCarrier FixedString(7),
