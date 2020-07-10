@@ -1,13 +1,15 @@
 import time, glob
 
-from ..databases_classes.postgres import Postgres
-from ..databases_classes.clickhouse import ClickHouse
+from databases_classes.postgres import Postgres
+from databases_classes.clickhouse import ClickHouse
+
 
 def mean(lst):
     sum = 0
     for t in lst:
-        sum+=t
+        sum += t
     return sum / len(lst)
+
 
 def run_benchmark(db_class, file):
     times_lst = []
@@ -18,14 +20,16 @@ def run_benchmark(db_class, file):
             res = db_class.execute_query(query)
             times_lst.append(time.time() - start_time)
 
-            if(i % 10 == 0):
+            if i % 10 == 0:
                 print(res)
 
     return times_lst
 
+
 def find_query_files():
     for file in glob.glob("*.sql"):
         yield file
+
 
 def processing(pg, ch, file):
     times_pg = run_benchmark(pg, file)
@@ -42,12 +46,13 @@ def processing(pg, ch, file):
     print("\t\tmax: {:.4}".format(max(times_pg)))
     print("\t\tmean: {:.4}".format(mean(times_pg)))
 
+
 if __name__ == "__main__":
     try:
         ch = ClickHouse('localhost')
         pg = Postgres('localhost', 'postgres', 'postgres')
 
-        for file in find_query_files:
+        for file in find_query_files():
             processing(pg, ch, file)
 
         ch.close_connect()

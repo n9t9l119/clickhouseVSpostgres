@@ -126,9 +126,9 @@ class Postgres:
 
     def insert_data(self, dataset):
         execute_values(self.cursor, f"INSERT INTO {self.tableName} VALUES %s", dataset)
-        # for i in range(1, math.ceil(len(dataset) / 100000) + 1):
-        #     execute_values(self.cursor, f"INSERT INTO {self.tableName} VALUES %s", dataset[(i - 1) * 100000:i * 100000])
-        #     print("pg insert {} of {}".format(str(i * 100000), len(dataset)))
+        # for i in range(1, math.ceil(len(dataset) / 100000) + 1): execute_values(self.cursor, f"INSERT INTO {
+        # self.tableName} VALUES %s", dataset[(i - 1) * 100000:i * 100000]) print("pg insert {} of {}".format(str(i *
+        # 100000), len(dataset)))
 
     def create_and_insert(self, dataset):
         self.create_table()

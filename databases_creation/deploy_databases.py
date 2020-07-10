@@ -1,7 +1,8 @@
-import dataset_reader, time
+import dataset_reader
+import time
 
-from database_classes.postgres import Postges
-from database_classes.clickhouse import ClickHouse
+from databases_classes.clickhouse import ClickHouse
+from databases_classes.postgres import Postgres
 
 if __name__ == "__main__":
     try:

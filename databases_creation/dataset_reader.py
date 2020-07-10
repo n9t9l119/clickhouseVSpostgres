@@ -1,4 +1,6 @@
-import csv, glob
+import csv
+import glob
+
 from datetime import datetime
 
 
