@@ -2,7 +2,7 @@ import math, psycopg2
 from psycopg2.extras import execute_values
 
 
-class Postges:
+class Postgres:
     tableName = 'benchmark'
 
     def __init__(self, host, user, password=None):
@@ -124,27 +124,20 @@ class Postges:
                         )''')
         self.cursor.execute(f"TRUNCATE TABLE {self.tableName}")
 
-    # v1
     def insert_data(self, dataset):
-        query = f"INSERT INTO {self.tableName} VALUES %s"
-        execute_values(self.cursor, query, dataset)
-
-    # v2 - для проверки есть ли разница в скорости добавлять весь датасет или лучше разбить на части
-    def insert_data2(self, dataset):
-        query = f"INSERT INTO {self.tableName} VALUES %s"
-
-        for i in range(1, math.ceil(len(dataset) / 10000) + 1):
-            print("pg insert {} of {}".format(str(i * 10000), len(dataset)))
-            execute_values(self.cursor, query, dataset[(i - 1) * 10000:i * 10000])
+        execute_values(self.cursor, f"INSERT INTO {self.tableName} VALUES %s", dataset)
+        # for i in range(1, math.ceil(len(dataset) / 100000) + 1):
+        #     execute_values(self.cursor, f"INSERT INTO {self.tableName} VALUES %s", dataset[(i - 1) * 100000:i * 100000])
+        #     print("pg insert {} of {}".format(str(i * 100000), len(dataset)))
 
     def create_and_insert(self, dataset):
         self.create_table()
         self.insert_data(dataset)
 
-    def create_and_insert2(self, dataset):
-        self.create_table()
-        self.insert_data2(dataset)
-
     def close_connect(self):
         self.cursor.close()
         self.connection.close()
+
+    def execute_query(self, query):
+        self.cursor.execute(query)
+        return self.cursor.fetchall()

@@ -75,7 +75,7 @@ converters = {
 
 
 def get_csv_files():
-    for file in glob.glob("..\On_Time_Reporting_Carrier_On_Time_Performance_*.csv"):
+    for file in glob.glob("..\csv\On_Time_Reporting_Carrier_On_Time_Performance_*.csv"):
         yield file
 
 
@@ -83,8 +83,8 @@ def read_dataset():
     data_rows = []
     for file in get_csv_files():
         with open(file) as csv_file:
+            # print("csv open {}".format(file))
             csv_reader = csv.DictReader(csv_file)
-            data_rows = []
             for row in csv_reader:
                 row_lst = []
 
@@ -96,6 +96,6 @@ def read_dataset():
 
                 data_rows.append(row_lst)
 
-                if csv_reader.line_num % 100000 == 0:
-                    print(csv_reader.line_num)
+                # if csv_reader.line_num % 100000 == 0:
+                #     print("csv read {}".format(csv_reader.line_num))
     return data_rows

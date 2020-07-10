@@ -133,3 +133,6 @@ class ClickHouse:
 
     def close_connect(self):
         self.client.disconnect()
+
+    def execute_query(self, query):
+        return self.client.execute(query)
