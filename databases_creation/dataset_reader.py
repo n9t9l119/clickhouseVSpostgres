@@ -77,7 +77,7 @@ converters = {
 
 
 def get_csv_files():
-    for file in glob.glob("..\csv\On_Time_Reporting_Carrier_On_Time_Performance_*.csv"):
+    for file in glob.glob("csv\\On_Time_Reporting_Carrier_On_Time_Performance_*.csv"):
         yield file
 
 
