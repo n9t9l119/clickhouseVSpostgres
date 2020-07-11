@@ -1,4 +1,6 @@
-import time, glob
+import glob
+import time
+from prettytable import PrettyTable
 
 
 def mean(lst):
@@ -28,9 +30,20 @@ def run_benchmark(pg, ch, file):
     times_pg = run_query(pg, file)
     times_ch = run_query(ch, file)
 
+    columns = ["", 'Clickhouse', "Postgres"]
+    rows = ['min', min(times_ch), min(times_pg),
+            'mean', mean(times_ch), mean(times_pg),
+            'max', max(times_ch), max(times_pg)]
+    table = PrettyTable(columns)
+
+    while rows:
+        table.add_row(rows[:3])
+        rows = rows[3:]
+
     benchmark_num = "Results of " + file
 
-    return benchmark_num.center(20), 'Clickhouse'.center(10), 'Postgres'.center(10)
+    print(benchmark_num.center(20))
+    print(table)
 
 #     return '''Results of {0}
 #         Clickhouse

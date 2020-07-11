@@ -1,18 +1,8 @@
-SELECT
-    Month,
-    DayofMonth
-FROM
-    benchmark
-WHERE
-    ArrDelay - DepDelay < 10
-    OR Diverted = 0
-    OR Cancelled = 0
-    AND CarrierDelay = 0
-    AND SecurityDelay = 0
-    AND DestStateName = 'California'
-    OR OriginStateName = 'California'
-    AND TailNum = '%5'
-    OR FlightNum = '%0'
-    AND AirTime > 300
-ORDER BY
-    Month
+SELECT DayofMonth, DestAirportID, DestCityName, WeatherDelay
+FROM benchmark
+WHERE DepDel15 = 1
+    AND DayofMonth IN (7, 13) 
+    AND DestAirportID > 11000 AND DestAirportID < 12000
+    AND Distance > 500 AND Distance < 1000
+    AND Diverted = 0
+    AND WeatherDelay > 10
