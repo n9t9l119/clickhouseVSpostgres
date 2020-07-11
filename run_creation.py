@@ -1,8 +1,8 @@
-from databases_creation import dataset_reader
+from creation import dataset_reader
 import time
 
-from databases_classes.clickhouse import ClickHouse
-from databases_classes.postgres import Postgres
+from classes.clickhouse import ClickHouse
+from classes.postgres import Postgres
 
 if __name__ == "__main__":
     ch = None

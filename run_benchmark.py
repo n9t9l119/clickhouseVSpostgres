@@ -1,8 +1,8 @@
 import time, glob
 
-from databases_classes.postgres import Postgres
-from databases_classes.clickhouse import ClickHouse
-from databases_benchmark import check_time
+from classes.postgres import Postgres
+from classes.clickhouse import ClickHouse
+from benchmark import check_time
 
 if __name__ == "__main__":
     ch = None
