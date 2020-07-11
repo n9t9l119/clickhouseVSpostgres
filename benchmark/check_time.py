@@ -31,19 +31,19 @@ def run_benchmark(pg, ch, file):
     times_ch = run_query(ch, file)
 
     columns = ["", 'Clickhouse', "Postgres"]
-    rows = ['min', min(times_ch), min(times_pg),
-            'mean', mean(times_ch), mean(times_pg),
-            'max', max(times_ch), max(times_pg)]
+    rows = ['Min', min(times_ch), min(times_pg),
+            'Mean', mean(times_ch), mean(times_pg),
+            'Max', max(times_ch), max(times_pg)]
     table = PrettyTable(columns)
 
     while rows:
         table.add_row(rows[:3])
         rows = rows[3:]
 
-    benchmark_num = "Results of " + file
-
+    benchmark_num = "\nResults of " + file[4:]
     print(benchmark_num.center(20))
-    print(table)
+
+    return table
 
 #     return '''Results of {0}
 #         Clickhouse

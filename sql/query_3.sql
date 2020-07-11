@@ -1,13 +1,13 @@
 SELECT
-    a.OriginAirportID,
-    num1,
-    b.DestAirportID,
-    num2
+    AirportsWithNoDepDelays.OriginAirportID,
+    NoDepDelays,
+    AirportsWithNoArrDelays.DestAirportID,
+    NoArrDelays
 FROM
     (
         SELECT
             OriginAirportID,
-            count(*) AS num1
+            count(*) AS NoDepDelays
         FROM
             benchmark
         WHERE
@@ -19,11 +19,11 @@ FROM
             AND CarrierDelay = 0
         GROUP BY
             OriginAirportID
-    ) a
+    ) AirportsWithNoDepDelays
     INNER JOIN (
         SELECT
             DestAirportID,
-            count(*) AS num2
+            count(*) AS NoArrDelays
         FROM
             benchmark
         WHERE
@@ -35,6 +35,6 @@ FROM
             AND CarrierDelay = 0
         GROUP BY
             DestAirportID
-    ) b on a.OriginAirportID = b.DestAirportID
+    ) AirportsWithNoArrDelays on AirportsWithNoDepDelays.OriginAirportID = AirportsWithNoArrDelays.DestAirportID
 ORDER BY
-    a.OriginAirportID
+    AirportsWithNoDepDelays.OriginAirportID

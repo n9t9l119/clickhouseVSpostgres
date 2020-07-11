@@ -1,13 +1,13 @@
 SELECT
-    a.Origin,
-    num1 * 100 / num2 as all_month,
-    num3 * 100 / num4 as end_of_month,
-    num5 * 100 / num6 as start_of_month
+    WeekendsAllMonth.Origin,
+    WeekendsAllMonthCount * 100 / AllMounthCount as AllMonthCoef,
+    WeekendsEndOfMonthCount * 100 / EndOfMonthCoef as EndOfMonthCoef,
+    WeekendsStartOfMonthCount * 100 / StartOfMonthCoef as StartOfMonthCoef
 FROM
     (
         SELECT
             Origin,
-            count(*) AS num1
+            count(*) AS WeekendsAllMonthCount
         FROM
             benchmark
         WHERE
@@ -15,22 +15,22 @@ FROM
             AND Year >= 1997
         GROUP BY
             Origin
-    ) a
+    ) WeekendsAllMonth
     INNER JOIN (
         SELECT
             Origin,
-            count(*) AS num2
+            count(*) AS AllMounthCount
         FROM
             benchmark
         WHERE
             Year >= 1997
         GROUP BY
             Origin
-    ) a2 on a.Origin = a2.Origin
+    ) AllMounth on WeekendsAllMonth.Origin = AllMounth.Origin
     INNER JOIN (
         SELECT
             Origin,
-            count(*) AS num3
+            count(*) AS WeekendsEndOfMonthCount
         FROM
             benchmark
         WHERE
@@ -39,11 +39,11 @@ FROM
             AND Year >= 1997
         GROUP BY
             Origin
-    ) b on a.Origin = b.Origin
+    ) WeekendsEndOfMonth on WeekendsAllMonth.Origin = WeekendsEndOfMonth.Origin
     INNER JOIN (
         SELECT
             Origin,
-            count(*) AS num4
+            count(*) AS EndOfMonthCoef
         FROM
             benchmark
         WHERE
@@ -51,11 +51,11 @@ FROM
             AND Year >= 1997
         GROUP BY
             Origin
-    ) b2 on b.Origin = b2.Origin
+    ) EndOfMonth on EndOfMonth.Origin = WeekendsEndOfMonth.Origin
     INNER JOIN (
         SELECT
             Origin,
-            count(*) AS num5
+            count(*) AS WeekendsStartOfMonthCount
         FROM
             benchmark
         WHERE
@@ -64,11 +64,11 @@ FROM
             AND Year >= 1997
         GROUP BY
             Origin
-    ) c on c.Origin = b.Origin
+    ) WeekendsStartOfMonth on WeekendsStartOfMonth.Origin = WeekendsEndOfMonth.Origin
     INNER JOIN (
         SELECT
             Origin,
-            count(*) AS num6
+            count(*) AS StartOfMonthCoef
         FROM
             benchmark
         WHERE
@@ -76,6 +76,6 @@ FROM
             AND Year >= 1997
         GROUP BY
             Origin
-    ) c2 on c.Origin = c2.Origin
+    ) StartOfMonth on WeekendsStartOfMonth.Origin = StartOfMonth.Origin
 ORDER BY
-    a.Origin
+    WeekendsAllMonth.Origin

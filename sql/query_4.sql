@@ -1,12 +1,12 @@
 SELECT
-    a.Carrier,
-    num1 * 100 / num2 DepDelayCoef,
-    num3 * 100 / num4 AirDelayCoef
+    FlightsWithDepDelayCount.Carrier,
+    DepDelayCount * 100 / AllFlightsCount as DepDelayCoef,
+    ArrDelayCount * 100 / AllFlightsCount as AirDelayCoef
 FROM
     (
         SELECT
             Carrier,
-            count(*) AS num1
+            count(*) AS DepDelayCount
         FROM
             benchmark
         WHERE
@@ -15,11 +15,11 @@ FROM
             AND Year <= 2008
         GROUP BY
             Carrier
-    ) a
+    ) FlightsWithDepDelayCount
     INNER JOIN (
         SELECT
             Carrier,
-            count(*) AS num2
+            count(*) AS AllFlightsCount
         FROM
             benchmark
         WHERE
@@ -27,11 +27,11 @@ FROM
             AND Year <= 2008
         GROUP BY
             Carrier
-    ) a2 on a.Carrier = a2.Carrier
+    ) Flights on FlightsWithDepDelayCount.Carrier = Flights.Carrier
     INNER JOIN(
         SELECT
             Carrier,
-            count(*) AS num3
+            count(*) AS ArrDelayCount
         FROM
             benchmark
         WHERE
@@ -40,18 +40,6 @@ FROM
             AND Year <= 2008
         GROUP BY
             Carrier
-    ) b on b.Carrier = a.Carrier
-    INNER JOIN (
-        SELECT
-            Carrier,
-            count(*) AS num4
-        FROM
-            benchmark
-        WHERE
-            Year >= 2000
-            AND Year <= 2008
-        GROUP BY
-            Carrier
-    ) b2 on b.Carrier = b2.Carrier
+    ) FlightsWithArrDelayCount on FlightsWithArrDelayCount.Carrier = FlightsWithDepDelayCount.Carrier
 ORDER BY
-    a.Carrier DESC
+    FlightsWithDepDelayCount.Carrier DESC

@@ -8,7 +8,7 @@ if __name__ == "__main__":
     ch = None
     pg = None
     try:
-        print("Started creation")
+        print("Databases creation is started...\n")
 
         ch = ClickHouse('localhost')
         pg = Postgres('localhost', 'postgres', 'postgres')
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         print(exc)
     
     finally:
-        print("Finished creation")
+        print("\nDatabases creation is finished")
         ch.close_connect()
         if pg:
             pg.close_connect()

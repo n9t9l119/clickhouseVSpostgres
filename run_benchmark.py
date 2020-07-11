@@ -1,14 +1,12 @@
-import time, glob
-
-from classes.postgres import Postgres
-from classes.clickhouse import ClickHouse
 from benchmark import check_time
+from classes.clickhouse import ClickHouse
+from classes.postgres import Postgres
 
 if __name__ == "__main__":
     ch = None
     pg = None
     try:
-        print("Started benchmark")
+        print("Benchmark is started...")
         
         ch = ClickHouse('localhost')
         pg = Postgres('localhost', 'postgres', 'postgres')
@@ -20,7 +18,7 @@ if __name__ == "__main__":
         print(exc)
     
     finally:
-        print("Finished benchmark")
+        print("\nBenchmark is finished")
         ch.close_connect()
         if pg:
             pg.close_connect()
