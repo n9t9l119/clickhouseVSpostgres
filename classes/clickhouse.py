@@ -8,7 +8,8 @@ class ClickHouse:
         self.client = Client(host=host)
 
     def create_table(self):
-        self.client.execute(f'''CREATE TABLE IF NOT EXISTS {self.tableName}
+        self.client.execute(f"DROP TABLE IF EXISTS {self.tableName}")
+        self.client.execute(f'''CREATE TABLE {self.tableName}
                             (Year Int16,
                             Quarter Int16,
                             Month Int16,

@@ -37,4 +37,4 @@ FROM
             DestAirportID
     ) b on a.OriginAirportID = b.DestAirportID
 ORDER BY
-    a.OriginAirportIDff
+    a.OriginAirportID

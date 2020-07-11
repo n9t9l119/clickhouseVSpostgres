@@ -24,7 +24,7 @@ converters = {
     'Year': to_int,
     'Quarter': to_int,
     'Month': to_int,
-    'DayOfMonth': to_int,
+    'DayofMonth': to_int,
     'DayOfWeek': to_int,
     'FlightDate': to_date,
     'DOT_ID_Reporting_Airline': to_int,

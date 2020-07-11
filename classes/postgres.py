@@ -11,7 +11,8 @@ class Postgres:
         self.cursor = self.connection.cursor()
 
     def create_table(self):
-        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.tableName}
+        self.cursor.execute(f"DROP TABLE IF EXISTS {self.tableName}")
+        self.cursor.execute(f'''CREATE TABLE {self.tableName}
                         (Year smallint,
                             Quarter smallint,
                             Month smallint,
