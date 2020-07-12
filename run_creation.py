@@ -13,19 +13,22 @@ if __name__ == "__main__":
         ch = ClickHouse('localhost')
         pg = Postgres('localhost', 'postgres', 'postgres')
 
-        dataset = []
-        start_time = time.time()
+        ch.create_table()
+        pg.create_table()
+        
         for file in dataset_reader.get_csv_files():
-            dataset.extend(dataset_reader.read_dataset(file))
-        print("Created dataset: {} sec. ".format(time.time() - start_time))
+            start_time = time.time()
+            dataset = dataset_reader.read_dataset(file)
+            print("Created dataset: {} sec. from {}".format(time.time() - start_time, file))
        
-        start_time = time.time()
-        ch.create_and_insert(dataset)
-        print("Inserted to ClickHouse: {} sec. ".format(time.time() - start_time))
+            start_time = time.time()
+            ch.insert_data(dataset)
+            print("Inserted to ClickHouse: {} sec. ".format(time.time() - start_time))
 
-        start_time = time.time()
-        pg.create_and_insert(dataset)
-        print("Inserted to Postgres: {} sec. ".format(time.time() - start_time))
+            start_time = time.time()
+            pg.insert_data(dataset)
+            print("Inserted to Postgres: {} sec. ".format(time.time() - start_time))
+            
     except Exception as exc:
         print(exc)
     
