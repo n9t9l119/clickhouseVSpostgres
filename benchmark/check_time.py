@@ -30,6 +30,9 @@ def run_benchmark(pg, ch, file):
     times_pg = run_query(pg, file)
     times_ch = run_query(ch, file)
 
+    chs = [min(times_ch), mean(times_ch), max(times_ch)]
+    pgs = [min(times_pg), mean(times_pg), max(times_pg)]
+
     columns = ["", 'Clickhouse', "Postgres"]
     rows = ['Min', min(times_ch), min(times_pg),
             'Mean', mean(times_ch), mean(times_pg),
@@ -43,7 +46,9 @@ def run_benchmark(pg, ch, file):
     benchmark_num = "\nResults of " + file[4:]
     print(benchmark_num.center(20))
 
-    return table
+    print(table)
+
+    return chs, pgs
 
 #     return '''Results of {0}
 #         Clickhouse
