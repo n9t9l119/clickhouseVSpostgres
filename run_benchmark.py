@@ -1,8 +1,7 @@
-from benchmark import check_time
 from classes.clickhouse import ClickHouse
 from classes.postgres import Postgres
 
-from graphic import Graph
+from benchmark import check_time
 
 if __name__ == "__main__":
     ch = None
@@ -13,14 +12,7 @@ if __name__ == "__main__":
         ch = ClickHouse('localhost')
         pg = Postgres('localhost', 'postgres', 'postgres')
 
-        pg_results = []
-        ch_results = []
-
-        for file in check_time.find_query_files():
-            results = check_time.run_benchmark(pg, ch, file)
-
-            ch_results.append(results[0])
-            pg_results.append(results[1])
+        check_time.run_benchmark(pg, ch, check_time.find_query_files())
 
     except Exception as exc:
         print(exc)
@@ -30,10 +22,5 @@ if __name__ == "__main__":
         ch.close_connect()
         if pg:
             pg.close_connect()
-
-    test = [ch_results, pg_results]
-    print (test)
-    graph = Graph(test)
-    graph.create_graph()
 
 input()

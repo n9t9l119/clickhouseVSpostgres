@@ -2,6 +2,8 @@ import glob
 import time
 from prettytable import PrettyTable
 
+from graphic import Graph
+
 
 def mean(lst):
     sum = 0
@@ -26,17 +28,11 @@ def find_query_files():
         yield file
 
 
-def run_benchmark(pg, ch, file):
-    times_pg = run_query(pg, file)
-    times_ch = run_query(ch, file)
-
-    chs = [min(times_ch), mean(times_ch), max(times_ch)]
-    pgs = [min(times_pg), mean(times_pg), max(times_pg)]
-
+def print_table(file, chs, pgs):
     columns = ["", 'Clickhouse', "Postgres"]
-    rows = ['Min', min(times_ch), min(times_pg),
-            'Mean', mean(times_ch), mean(times_pg),
-            'Max', max(times_ch), max(times_pg)]
+    rows = ['Min', chs[0], pgs[0],
+            'Mean', chs[1], pgs[1],
+            'Max', chs[2], pgs[2]]
     table = PrettyTable(columns)
 
     while rows:
@@ -48,15 +44,26 @@ def run_benchmark(pg, ch, file):
 
     print(table)
 
-    return chs, pgs
 
-#     return '''Results of {0}
-#         Clickhouse
-#         min: {1:.4}
-#         max: {2:.4}
-#         mean: {3:.4}
-#     Postgres:
-#         min: {4:.4}
-#         max: {5:.4}
-#         mean: {6:.4}
-# '''.format(file, min(times_ch), max(times_ch), mean(times_ch), min(times_pg), max(times_pg), mean(times_pg))
+def show_graphs(results):
+    graph = Graph(results)
+    graph.create_graph()
+
+
+def run_benchmark(pg, ch, files):
+    pg_results = []
+    ch_results = []
+
+    for file in files:
+        times_pg = run_query(pg, file)
+        times_ch = run_query(ch, file)
+
+        ch_time = [min(times_ch), mean(times_ch), max(times_ch)]
+        pg_time = [min(times_pg), mean(times_pg), max(times_pg)]
+
+        ch_results.append(ch_time)
+        pg_results.append(pg_time)
+
+        print_table(file, ch_time, pg_time)
+    show_graphs([ch_results, pg_results])
+
